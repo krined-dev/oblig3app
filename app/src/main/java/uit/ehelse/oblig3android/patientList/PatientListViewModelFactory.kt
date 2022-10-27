@@ -4,7 +4,7 @@ package uit.ehelse.oblig3android.patientList
 //import androidx.lifecycle.ViewModelProvider
 //
 //class PatientListViewModelFactory (
-////    private val patientDomain: her skal pasien listen inn
+////    private val patientDomain: her skal pasient listen inn
 //    private val application: Application
 //        ) : ViewModelProvider.Factory {
 //
