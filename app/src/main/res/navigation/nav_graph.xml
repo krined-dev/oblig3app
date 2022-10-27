@@ -19,7 +19,7 @@
             android:id="@+id/SecondFragment"
             android:name="uit.ehelse.oblig3android.loggSymptoms.LoggSymptomsFragment"
             android:label="@string/second_fragment_label"
-            tools:layout="@layout/fragment_logg_symptoms">
+            tools:layout="@layout/fragment_log_symptoms">
 
         <action
                 android:id="@+id/action_SecondFragment_to_FirstFragment"

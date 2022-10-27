@@ -7,22 +7,22 @@
         android:layout_height="match_parent"
         tools:context=".loggSymptoms.LoggSymptomsFragment">
 
-<!--    <data>-->
+    <!--    <data>-->
 
-<!--        <variable name="loggSymptomsViewModel"-->
-<!--                  type="uit.ehelse.oblig3android.loggSymptoms.LoggSymptomsViewModel"/>-->
+    <!--        <variable name="loggSymptomsViewModel"-->
+    <!--                  type="uit.ehelse.oblig3android.loggSymptoms.LoggSymptomsViewModel"/>-->
 
-<!--    </data>-->
+    <!--    </data>-->
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/logg_symptoms_guideline_vertical"
+            android:id="@+id/log_symptoms_guideline_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.15"/>
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/logg_symptoms_guideline_horizontal"
+            android:id="@+id/log_symptoms_guideline_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/register_symptoms"
-            app:layout_constraintTop_toTopOf="@+id/logg_symptoms_guideline_horizontal"
+            app:layout_constraintTop_toTopOf="@+id/log_symptoms_guideline_horizontal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/patient_name"
@@ -53,7 +53,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               app:layout_constraintTop_toBottomOf="@+id/patient_name"
-              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintStart_toStartOf="@+id/log_symptoms_guideline_vertical"
               app:layout_constraintBottom_toTopOf="@+id/checkbox_coughing"
     />
 
@@ -62,7 +62,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               app:layout_constraintTop_toBottomOf="@+id/checkbox_fever"
-              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintStart_toStartOf="@+id/log_symptoms_guideline_vertical"
               app:layout_constraintBottom_toTopOf="@+id/checkbox_tiredness"
     />
 
@@ -71,7 +71,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               app:layout_constraintTop_toBottomOf="@+id/checkbox_coughing"
-              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintStart_toStartOf="@+id/log_symptoms_guideline_vertical"
               app:layout_constraintBottom_toTopOf="@+id/checkbox_loss_of_taste_and_smell"
     />
 
@@ -80,7 +80,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               app:layout_constraintTop_toBottomOf="@+id/checkbox_tiredness"
-              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintStart_toStartOf="@+id/log_symptoms_guideline_vertical"
               app:layout_constraintBottom_toTopOf="@+id/checkbox_sore_throat"
     />
 
@@ -89,7 +89,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               app:layout_constraintTop_toBottomOf="@+id/checkbox_loss_of_taste_and_smell"
-              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintStart_toStartOf="@+id/log_symptoms_guideline_vertical"
               app:layout_constraintBottom_toTopOf="@+id/checkbox_headache"
     />
 
@@ -98,7 +98,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               app:layout_constraintTop_toBottomOf="@+id/checkbox_sore_throat"
-              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintStart_toStartOf="@+id/log_symptoms_guideline_vertical"
               app:layout_constraintBottom_toTopOf="@+id/checkbox_aches_and_pains"
     />
 
@@ -107,7 +107,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               app:layout_constraintTop_toBottomOf="@+id/checkbox_headache"
-              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintStart_toStartOf="@+id/log_symptoms_guideline_vertical"
               app:layout_constraintBottom_toTopOf="@+id/checkbox_diarrhoea"
     />
 
@@ -116,7 +116,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               app:layout_constraintTop_toBottomOf="@+id/checkbox_aches_and_pains"
-              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintStart_toStartOf="@+id/log_symptoms_guideline_vertical"
               app:layout_constraintBottom_toTopOf="@+id/checkbox_rashes_or_discoloration"
     />
 
@@ -125,7 +125,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               app:layout_constraintTop_toBottomOf="@+id/checkbox_diarrhoea"
-              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintStart_toStartOf="@+id/log_symptoms_guideline_vertical"
               app:layout_constraintBottom_toTopOf="@+id/checkbox_breathing_complication"
     />
 
@@ -134,7 +134,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               app:layout_constraintTop_toBottomOf="@+id/checkbox_rashes_or_discoloration"
-              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintStart_toStartOf="@+id/log_symptoms_guideline_vertical"
               app:layout_constraintBottom_toTopOf="@+id/button_save"
     />
 
@@ -150,3 +150,4 @@
     />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

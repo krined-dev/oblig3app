@@ -7,14 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import uit.ehelse.oblig3android.R
-import uit.ehelse.oblig3android.databinding.FragmentLoggSymptomsBinding
+import uit.ehelse.oblig3android.databinding.FragmentLogSymptomsBinding
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
 class LoggSymptomsFragment : Fragment() {
 
-    private var _binding: FragmentLoggSymptomsBinding? = null
+    private var _binding: FragmentLogSymptomsBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -25,7 +25,7 @@ class LoggSymptomsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        _binding = FragmentLoggSymptomsBinding.inflate(inflater, container, false)
+        _binding = FragmentLogSymptomsBinding.inflate(inflater, container, false)
         return binding.root
 
     }
