@@ -7,6 +7,21 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="patient_list">Patient list</string>
+    <string name="choose_patient">Chose patient</string>
+
+    <!-- Fragment logg symptoms -->
+    <string name="register_symptoms">Register symptoms</string>
+    <string name="fever">Fever</string>
+    <string name="coughing">Coughing</string>
+    <string name="tiredness">Tiredness</string>
+    <string name="loss_of_taste_and_or_smell">Loss of taste and/or smell</string>
+    <string name="sore_throat">Sore throat</string>
+    <string name="headache">Headache</string>
+    <string name="aches_and_pains">Aches and pains</string>
+    <string name="diarrhoa">Diarrhoa</string>
+    <string name="rashes_or_discoloration">Rashes or discoloration</string>
+    <string name="breathing_complication">Breathing complication</string>
+    <string name="save">Save</string>
+
 </resources>

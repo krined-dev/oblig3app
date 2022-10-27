@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- fragment_patient -->
+    <item name="patient" type="id"/>
+    <item name="patient_list" type="id"/>
+    <item name="button_first" type="id"/>
+
+    <!-- fragment_patient_list -->
+
+
+</resources>

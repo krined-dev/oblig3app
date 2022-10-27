@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".loggSymptoms.LoggSymptomsFragment">
+
+<!--    <data>-->
+
+<!--        <variable name="loggSymptomsViewModel"-->
+<!--                  type="uit.ehelse.oblig3android.loggSymptoms.LoggSymptomsViewModel"/>-->
+
+<!--    </data>-->
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/logg_symptoms_guideline_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.15"/>
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/logg_symptoms_guideline_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.05"/>
+
+    <TextView
+            android:id="@+id/register_symptoms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_symptoms"
+            app:layout_constraintTop_toTopOf="@+id/logg_symptoms_guideline_horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/patient_name"
+    />
+    <TextView android:id="@+id/patient_name"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Patient name, id"
+              app:layout_constraintTop_toBottomOf="@+id/register_symptoms"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintBottom_toTopOf="@id/checkbox_fever"
+    />
+
+    <CheckBox android:id="@+id/checkbox_fever"
+              android:text="@string/fever"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              app:layout_constraintTop_toBottomOf="@+id/patient_name"
+              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintBottom_toTopOf="@+id/checkbox_coughing"
+    />
+
+    <CheckBox android:id="@+id/checkbox_coughing"
+              android:text="@string/coughing"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              app:layout_constraintTop_toBottomOf="@+id/checkbox_fever"
+              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintBottom_toTopOf="@+id/checkbox_tiredness"
+    />
+
+    <CheckBox android:id="@+id/checkbox_tiredness"
+              android:text="@string/tiredness"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              app:layout_constraintTop_toBottomOf="@+id/checkbox_coughing"
+              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintBottom_toTopOf="@+id/checkbox_loss_of_taste_and_smell"
+    />
+
+    <CheckBox android:id="@+id/checkbox_loss_of_taste_and_smell"
+              android:text="@string/loss_of_taste_and_or_smell"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              app:layout_constraintTop_toBottomOf="@+id/checkbox_tiredness"
+              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintBottom_toTopOf="@+id/checkbox_sore_throat"
+    />
+
+    <CheckBox android:id="@+id/checkbox_sore_throat"
+              android:text="@string/sore_throat"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              app:layout_constraintTop_toBottomOf="@+id/checkbox_loss_of_taste_and_smell"
+              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintBottom_toTopOf="@+id/checkbox_headache"
+    />
+
+    <CheckBox android:id="@+id/checkbox_headache"
+              android:text="@string/headache"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              app:layout_constraintTop_toBottomOf="@+id/checkbox_sore_throat"
+              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintBottom_toTopOf="@+id/checkbox_aches_and_pains"
+    />
+
+    <CheckBox android:id="@+id/checkbox_aches_and_pains"
+              android:text="@string/aches_and_pains"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              app:layout_constraintTop_toBottomOf="@+id/checkbox_headache"
+              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintBottom_toTopOf="@+id/checkbox_diarrhoea"
+    />
+
+    <CheckBox android:id="@+id/checkbox_diarrhoea"
+              android:text="@string/diarrhoa"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              app:layout_constraintTop_toBottomOf="@+id/checkbox_aches_and_pains"
+              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintBottom_toTopOf="@+id/checkbox_rashes_or_discoloration"
+    />
+
+    <CheckBox android:id="@+id/checkbox_rashes_or_discoloration"
+              android:text="@string/rashes_or_discoloration"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              app:layout_constraintTop_toBottomOf="@+id/checkbox_diarrhoea"
+              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintBottom_toTopOf="@+id/checkbox_breathing_complication"
+    />
+
+    <CheckBox android:id="@+id/checkbox_breathing_complication"
+              android:text="@string/breathing_complication"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              app:layout_constraintTop_toBottomOf="@+id/checkbox_rashes_or_discoloration"
+              app:layout_constraintStart_toStartOf="@+id/logg_symptoms_guideline_vertical"
+              app:layout_constraintBottom_toTopOf="@+id/button_second"
+    />
+
+    <Button
+            android:id="@+id/button_second"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            app:layout_constraintTop_toBottomOf="@id/checkbox_breathing_complication"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+    />
+</androidx.constraintlayout.widget.ConstraintLayout>
