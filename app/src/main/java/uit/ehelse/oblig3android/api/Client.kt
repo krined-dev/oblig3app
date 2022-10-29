@@ -4,8 +4,11 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
@@ -13,13 +16,38 @@ import kotlinx.serialization.json.Json
  *  We just hardcode some credentials for now to use for demoing the app...
  */
 
-const val USERNAME = "user01"
-const val PASSWORD = "password"
+const val USERNAME = "test"
+const val PASSWORD = "test"
 
+object TokenManager {
+    private var token: String? = null
+    private var expiresAt: Long? = null
+
+   @JvmName("getToken1")
+   suspend fun getToken(): String? = withContext(Dispatchers.IO) {
+       if (token == null) {
+           val res = httpClient().authorize(LoginRequest(USERNAME, PASSWORD))
+           token = res.token
+           expiresAt = res.timeToLive
+       }
+
+       if (System.currentTimeMillis() >= expiresAt!!) {
+           val res = httpClient().authorize(LoginRequest(USERNAME, PASSWORD))
+           token = res.token
+           expiresAt = res.timeToLive
+       }
+
+       token
+    }
+
+
+}
 interface AppHttpClient {
     suspend fun authorize(loginRequest: LoginRequest): LoginResponse
 
     suspend fun registerNewSymptoms(registerNewSymptomsRequest: RegisterNewSymptomsRequest): String
+
+    suspend fun getAllPatients(): String
 
 }
 fun httpClient() = object : AppHttpClient {
@@ -41,14 +69,22 @@ fun httpClient() = object : AppHttpClient {
     }
 
     override suspend fun registerNewSymptoms(registerNewSymptomsRequest: RegisterNewSymptomsRequest): String {
-        val token = authorize(LoginRequest(USERNAME, PASSWORD))
         return client.use { handler ->
             handler.post("http://localhost:8080/symptoms") {
                 setBody(registerNewSymptomsRequest)
                 header("Content-Type", "application/json")
-                header("Authorization", "Bearer ${token.token}")
+                header("Authorization", "Bearer ${TokenManager.getToken()}")
             }
         }.body()
+    }
+
+    override suspend fun getAllPatients(): String {
+        return client.use { handler ->
+            handler.get("http://localhost:8080/patients") {
+                header("Authorization", "Bearer ${TokenManager.getToken()}")
+            }
+        }.bodyAsText()
+
     }
 }
 
@@ -60,8 +96,10 @@ data class LoginRequest(
 
 @Serializable
 data class LoginResponse(
-    val token: String
+    val token: String,
+    val timeToLive: Long
 )
+
 
 
 @Serializable
@@ -93,10 +131,11 @@ enum class Details(val sore: Int){
 }
 
 // EXAMPLE USAGE:
-//fun main() {
-//    val client = httpClient()
-//    runBlocking {
-//        val response = client.authorize(LoginRequest(USERNAME, PASSWORD))
-//        println(response)
-//    }
-//}
+fun main() {
+    val client = httpClient()
+    runBlocking {
+        val response = client.getAllPatients()
+        println(response)
+    }
+}
+
