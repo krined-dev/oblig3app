@@ -9,6 +9,7 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
@@ -47,7 +48,9 @@ interface AppHttpClient {
 
     suspend fun registerNewSymptoms(registerNewSymptomsRequest: RegisterNewSymptomsRequest): String
 
-    suspend fun getAllPatients(): String
+    suspend fun getAllPatients(): EndpointResources<IdResource<String>>
+
+    suspend fun getAllRegisteredSymptoms(): EndpointResources<IdResource<Long>>
 
 }
 fun httpClient() = object : AppHttpClient {
@@ -78,13 +81,16 @@ fun httpClient() = object : AppHttpClient {
         }.body()
     }
 
-    override suspend fun getAllPatients(): String {
-        return client.use { handler ->
+    override suspend fun getAllPatients(): EndpointResources<IdResource<String>> = client.use { handler ->
             handler.get("http://localhost:8080/patients") {
                 header("Authorization", "Bearer ${TokenManager.getToken()}")
-            }
-        }.bodyAsText()
+            }.body()
+    }
 
+    override suspend fun getAllRegisteredSymptoms(): EndpointResources<IdResource<Long>> = client.use { handler ->
+        handler.get("http://localhost:8080/symptoms") {
+            header("Authorization", "Bearer ${TokenManager.getToken()}")
+        }.body()
     }
 }
 
@@ -138,4 +144,34 @@ fun main() {
         println(response)
     }
 }
+
+
+@Serializable
+data class EndpointResources<T>(
+    val resources: List<T?>
+)
+
+@Serializable
+enum class SupportedHttpMethod(val rel: String) {
+    GET("self"),
+    PUT("update"),
+    DELETE("delete");
+    companion object {
+        fun getAll(): List<SupportedHttpMethod> = listOf(GET, PUT, DELETE)
+    }
+}
+
+@Serializable
+data class IdResource<T>(
+    val id: T,
+    val name: String,
+    @SerialName("_links")
+    val links: List<EndpointLink>,
+)
+@Serializable
+data class EndpointLink(
+    val rel: String,
+    val method: SupportedHttpMethod,
+    val href: String,
+)
 
