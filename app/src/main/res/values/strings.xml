@@ -23,5 +23,6 @@
     <string name="rashes_or_discoloration">Rashes or discoloration</string>
     <string name="breathing_complication">Breathing complication</string>
     <string name="save">Save</string>
+    <string name="refresh">Refresh</string>
 
 </resources>

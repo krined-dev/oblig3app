@@ -1,16 +1,20 @@
 package uit.ehelse.oblig3android.api
 
+import android.util.Log
+import arrow.core.Either
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
+import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 /**
@@ -19,38 +23,47 @@ import kotlinx.serialization.json.Json
 
 const val USERNAME = "test"
 const val PASSWORD = "test"
+const val BASE_URL = "https://oblig3web.krined.no"
 
 object TokenManager {
     private var token: String? = null
     private var expiresAt: Long? = null
 
-   @JvmName("getToken1")
-   suspend fun getToken(): String? = withContext(Dispatchers.IO) {
-       if (token == null) {
-           val res = httpClient().authorize(LoginRequest(USERNAME, PASSWORD))
-           token = res.token
-           expiresAt = res.timeToLive
-       }
+    @JvmName("getToken1")
+    suspend fun getToken(): String? = withContext(Dispatchers.IO) {
+        if (token == null) {
+            val res = httpClient().authorize(LoginRequest(USERNAME, PASSWORD)).map {
+                token = it.token
+                expiresAt = it.timeToLive
+                token
+            }.mapLeft {
+                token = null
+            }
+        }
 
-       if (System.currentTimeMillis() >= expiresAt!!) {
-           val res = httpClient().authorize(LoginRequest(USERNAME, PASSWORD))
-           token = res.token
-           expiresAt = res.timeToLive
-       }
+        if (System.currentTimeMillis() >= expiresAt ?: 0) {
+            val res = httpClient().authorize(LoginRequest(USERNAME, PASSWORD)).map {
+                token = it.token
+                expiresAt = it.timeToLive
+                token
+            }.mapLeft {
+                token = null
+            }
+        }
 
-       token
+        token
     }
-
-
 }
 interface AppHttpClient {
-    suspend fun authorize(loginRequest: LoginRequest): LoginResponse
+    suspend fun authorize(loginRequest: LoginRequest): Either<ApiError, LoginResponse>
 
     suspend fun registerNewSymptoms(registerNewSymptomsRequest: RegisterNewSymptomsRequest): String
 
-    suspend fun getAllPatients(): EndpointResources<IdResource<String>>
+    suspend fun getAllPatients(): Either<ApiError, EndpointResources<IdResource<String>>>
 
     suspend fun getAllRegisteredSymptoms(): EndpointResources<IdResource<Long>>
+
+    suspend fun getAllRegisteredPatientsForWard(wardId: String): EndpointResources<IdResource<String>>
 
 }
 fun httpClient() = object : AppHttpClient {
@@ -62,35 +75,59 @@ fun httpClient() = object : AppHttpClient {
             })
         }
     }
-    override suspend fun authorize(loginRequest: LoginRequest): LoginResponse {
-        return client.use { handler ->
-            handler.post("http://localhost:8080/login") {
+    override suspend fun authorize(loginRequest: LoginRequest): Either<ApiError, LoginResponse> {
+        val response = client.use { handler ->
+            handler.post("$BASE_URL/login") {
                  setBody(LoginRequest(USERNAME, PASSWORD)) // TODO: Change to loginRequest
             header("Content-Type", "application/json")
             }
-        }.body()
+        }
+
+        if (response.status == HttpStatusCode.OK) {
+            return Either.Right(response.body())
+        } else {
+            return Either.Left(ApiErrorType.Unauthorized)
+        }
     }
 
-    override suspend fun registerNewSymptoms(registerNewSymptomsRequest: RegisterNewSymptomsRequest): String {
-        return client.use { handler ->
-            handler.post("http://localhost:8080/symptoms") {
+    override suspend fun registerNewSymptoms(registerNewSymptomsRequest: RegisterNewSymptomsRequest): String =
+        client.use { handler ->
+            handler.post("$BASE_URL/symptoms") {
                 setBody(registerNewSymptomsRequest)
                 header("Content-Type", "application/json")
                 header("Authorization", "Bearer ${TokenManager.getToken()}")
             }
         }.body()
+
+    override suspend fun getAllPatients(): Either<ApiError, EndpointResources<IdResource<String>>> = client.use { handler ->
+        val response = handler.get("$BASE_URL/patients") {
+            header("Authorization", "Bearer ${TokenManager.getToken()}")
+        }
+        Log.d("TOKEN", "Token: ${TokenManager.getToken()}")
+        if (response.status.isSuccess()) {
+            Either.Right(response.body())
+        } else {
+            when (response.status)  {
+                HttpStatusCode.NoContent -> Either.Left(response.body<ApiErrorType.NotFound>())
+                else -> Either.Left(ApiErrorType.Unauthorized)
+            }
+        }
     }
 
-    override suspend fun getAllPatients(): EndpointResources<IdResource<String>> = client.use { handler ->
-            handler.get("http://localhost:8080/patients") {
+    override suspend fun getAllRegisteredSymptoms(): EndpointResources<IdResource<Long>> {
+        return client.use { handler ->
+            handler.get("$BASE_URL/symptoms") {
                 header("Authorization", "Bearer ${TokenManager.getToken()}")
             }.body()
+        }
     }
 
-    override suspend fun getAllRegisteredSymptoms(): EndpointResources<IdResource<Long>> = client.use { handler ->
-        handler.get("http://localhost:8080/symptoms") {
-            header("Authorization", "Bearer ${TokenManager.getToken()}")
-        }.body()
+    override suspend fun getAllRegisteredPatientsForWard(wardId: String): EndpointResources<IdResource<String>> {
+        return client.use { handler ->
+            handler.get("$BASE_URL/patients?wardId=$wardId") {
+                header("Authorization", "Bearer ${TokenManager.getToken()}")
+            }.body()
+        }
     }
 }
 
@@ -136,15 +173,6 @@ enum class Details(val sore: Int){
     COMMON(3), LESS_COMMON(1), SERIOUS(2)
 }
 
-// EXAMPLE USAGE:
-fun main() {
-    val client = httpClient()
-    runBlocking {
-        val response = client.getAllPatients()
-        println(response)
-    }
-}
-
 
 @Serializable
 data class EndpointResources<T>(
@@ -174,4 +202,26 @@ data class EndpointLink(
     val method: SupportedHttpMethod,
     val href: String,
 )
+interface ApiError
 
+@Serializable
+sealed class ApiErrorType : ApiError {
+    @Serializable
+    object Unauthorized : ApiErrorType()
+    object Forbidden : ApiErrorType()
+    @Serializable
+    data class NotFound(val error: String) : ApiErrorType()
+    object BadRequest : ApiErrorType()
+    object InternalServerError : ApiErrorType()
+    object Unknown : ApiErrorType()
+}
+
+fun main() {
+    val json = """
+        { "error": "NotFound(item=test not found in database)" }
+    """.trimIndent()
+
+    val jsonT: ApiErrorType.NotFound = Json.decodeFromString(json)
+
+    println(jsonT)
+}

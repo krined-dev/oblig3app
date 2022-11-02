@@ -5,20 +5,24 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import uit.ehelse.oblig3android.R
 import uit.ehelse.oblig3android.databinding.FragmentPatientListBinding
+import javax.inject.Inject
 
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 
-private lateinit var viewModel: PatientListViewModel
-class PatientListFragment : Fragment() {
+@AndroidEntryPoint
+class PatientListFragment() : Fragment() {
 
     private var _binding: FragmentPatientListBinding? = null
 
+    private val viewModel by viewModels<PatientListViewModel>()
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -36,8 +40,12 @@ class PatientListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.patientList?.setOnClickListener {
+        binding.patientList.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+        }
+
+        binding.refreshButton.setOnClickListener {
+            viewModel.getPatients()
         }
     }
 
