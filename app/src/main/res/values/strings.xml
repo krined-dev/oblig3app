@@ -24,5 +24,7 @@
     <string name="breathing_complication">Breathing complication</string>
     <string name="save">Save</string>
     <string name="refresh">Refresh</string>
+    <string name="element_text">\"\"</string>
+    <string name="register_symptoms_button">Select</string>
 
 </resources>

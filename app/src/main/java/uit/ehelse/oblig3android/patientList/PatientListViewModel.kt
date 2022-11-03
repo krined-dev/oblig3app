@@ -17,28 +17,33 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PatientListViewModel @Inject constructor(application: Application) : AndroidViewModel(application)  {
-    private val _patients = MutableLiveData<List<PatientModel>>()
-    val patients: MutableLiveData<List<PatientModel>>
-        get() = _patients
+    private val _patientsResponseData = MutableLiveData<List<PatientModel>>()
+    val patients: LiveData<List<PatientModel>>
+        get() = _patientsResponseData
 
     private val _error: MutableLiveData<String> = MutableLiveData()
     val error: LiveData<String>
         get() = _error
 
+    val patientsList: List<String>
+        get() = _patientsResponseData.value?.map {
+            it.id
+        } ?: emptyList()
+
 
     // get patients async
-    fun getPatients() {
+    suspend fun getPatientsAsync() {
         viewModelScope.launch {
             val resources = httpClient().getAllPatients().map {
                 Log.d("PatientListViewModel", "getPatients: \n ${Json.encodeToString(it.resources)}")
-                _patients.value = it.resources.map {
+                _patientsResponseData.value = it.resources.map {
                     PatientModel.tryFromResource(it)
                 }
             }.mapLeft {
                 Log.d("PatientListViewModel", "getPatients: $it")
             }
 
-        }
+        }.join()
     }
 
 }

@@ -1,14 +1,22 @@
 package uit.ehelse.oblig3android.patientList
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import uit.ehelse.oblig3android.R
+import uit.ehelse.oblig3android.adapters.PatientListAdapter
 import uit.ehelse.oblig3android.databinding.FragmentPatientListBinding
 import javax.inject.Inject
 
@@ -33,8 +41,19 @@ class PatientListFragment() : Fragment() {
     ): View? {
 
         _binding = FragmentPatientListBinding.inflate(inflater, container, false)
-        return binding.root
+        // get patients async in viewmodelscope
+        lifecycleScope.launch {
+            viewModel.getPatientsAsync()
+        }
 
+        // observe live data
+        viewModel.patients.observe(viewLifecycleOwner) {
+            // set adapter
+            binding.patientList.adapter = PatientListAdapter(it)
+            binding.patientList.layoutManager = LinearLayoutManager(context)
+        }
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,8 +64,13 @@ class PatientListFragment() : Fragment() {
         }
 
         binding.refreshButton.setOnClickListener {
-            viewModel.getPatients()
+            lifecycleScope.launch {
+                viewModel.getPatientsAsync()
+            }
         }
+
+
+
     }
 
     override fun onDestroyView() {
