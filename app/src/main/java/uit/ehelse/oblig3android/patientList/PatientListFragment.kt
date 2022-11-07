@@ -18,6 +18,7 @@ import kotlinx.coroutines.withContext
 import uit.ehelse.oblig3android.R
 import uit.ehelse.oblig3android.adapters.PatientListAdapter
 import uit.ehelse.oblig3android.databinding.FragmentPatientListBinding
+import uit.ehelse.oblig3android.databinding.PatientRowItemBinding
 import javax.inject.Inject
 
 
@@ -68,9 +69,6 @@ class PatientListFragment() : Fragment() {
                 viewModel.getPatientsAsync()
             }
         }
-
-
-
     }
 
     override fun onDestroyView() {

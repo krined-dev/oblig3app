@@ -8,7 +8,7 @@
     <fragment
             android:id="@+id/FirstFragment"
             android:name="uit.ehelse.oblig3android.patientList.PatientListFragment"
-            android:label="@string/first_fragment_label"
+            android:label="Patient list"
             tools:layout="@layout/fragment_patient_list">
 
         <action
@@ -18,11 +18,14 @@
     <fragment
             android:id="@+id/SecondFragment"
             android:name="uit.ehelse.oblig3android.loggSymptoms.LoggSymptomsFragment"
-            android:label="@string/second_fragment_label"
+            android:label="Register symptoms"
             tools:layout="@layout/fragment_log_symptoms">
 
         <action
                 android:id="@+id/action_SecondFragment_to_FirstFragment"
                 app:destination="@id/FirstFragment"/>
+<!--        <argument-->
+<!--            android:name="selectedUser"-->
+<!--            app:argType="uit.ehelse.oblig3android.api.AppHttpClient" />-->
     </fragment>
 </navigation>

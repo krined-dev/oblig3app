@@ -2,19 +2,21 @@ package uit.ehelse.oblig3android.adapters
 
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import uit.ehelse.oblig3android.R
 import uit.ehelse.oblig3android.patientList.PatientModel
-import javax.inject.Inject
-import javax.inject.Singleton
 
-class PatientListAdapter (private val data: List<PatientModel>) : RecyclerView.Adapter<PatientListAdapter.ViewHolder>() {
+class PatientListAdapter (private val data: List<PatientModel>,
+                          //private val onClickListener: OnClickListener
+     )
+    : RecyclerView.Adapter<PatientListAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val id: TextView = view.findViewById(R.id.patient_id)
-        val button: View = view.findViewById(R.id.register_symtpom_button)
+        val button: View = view.findViewById(R.id.register_symptom_button)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,7 +31,15 @@ class PatientListAdapter (private val data: List<PatientModel>) : RecyclerView.A
         textView.text = patient.id
         val button = holder.button
         button.isEnabled = true
+//        holder.itemView.setOnClickListener {
+//            onClickListener.onClick()
+//        }
+
     }
 
     override fun getItemCount() = data.size
+
+//    class OnClickListener(val clickListener: (patient: )-> Unit)  {
+//        fun onClick() = clickListener()
+//    }
 }

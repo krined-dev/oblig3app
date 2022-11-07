@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class PatientListViewModel @Inject constructor(application: Application) : AndroidViewModel(application)  {
+class PatientListViewModel @Inject constructor(application: Application) : AndroidViewModel(application) {
     private val _patientsResponseData = MutableLiveData<List<PatientModel>>()
     val patients: LiveData<List<PatientModel>>
         get() = _patientsResponseData
@@ -42,10 +42,8 @@ class PatientListViewModel @Inject constructor(application: Application) : Andro
             }.mapLeft {
                 Log.d("PatientListViewModel", "getPatients: $it")
             }
-
         }.join()
     }
-
 }
 
 class PatientModel(
