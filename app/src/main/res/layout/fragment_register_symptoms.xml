@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".loggSymptoms.LoggSymptomsFragment">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".registerSymptoms.RegisterSymptomsFragment">
 
     <!--    <data>-->
 
@@ -15,34 +15,24 @@
     <!--    </data>-->
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/log_symptoms_guideline_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.15"/>
+        android:id="@+id/log_symptoms_guideline_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.15"/>
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/log_symptoms_guideline_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.05"/>
+        android:id="@+id/log_symptoms_guideline_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.05"/>
 
-    <TextView
-            android:id="@+id/register_symptoms"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/register_symptoms"
-            app:layout_constraintTop_toTopOf="@+id/log_symptoms_guideline_horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/patient_name"
-    />
     <TextView android:id="@+id/patient_name"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="Patient name, id"
-              app:layout_constraintTop_toBottomOf="@+id/register_symptoms"
+              app:layout_constraintTop_toTopOf="parent"
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintBottom_toTopOf="@id/checkbox_fever"
@@ -139,14 +129,14 @@
     />
 
     <Button
-            android:id="@+id/button_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/save"
-            app:layout_constraintTop_toBottomOf="@id/checkbox_breathing_complication"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        app:layout_constraintTop_toBottomOf="@id/checkbox_breathing_complication"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
     />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,17 +2,21 @@ package uit.ehelse.oblig3android.adapters
 
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import uit.ehelse.oblig3android.R
 import uit.ehelse.oblig3android.patientList.PatientModel
 
-class PatientListAdapter (private val data: List<PatientModel>,
-                          //private val onClickListener: OnClickListener
-     )
-    : RecyclerView.Adapter<PatientListAdapter.ViewHolder>() {
+class PatientListAdapter(
+    //private val onClickListener: OnClickListener,
+    private val data: List<PatientModel>
+) : RecyclerView.Adapter<PatientListAdapter.ViewHolder>() {
+//    private val onClickListener: OnClickListener
+//) : androidx.recyclerview.widget.ListAdapter<PatientModel, PatientListAdapter.ViewHolder>(Diffcallback) {
+
+
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val id: TextView = view.findViewById(R.id.patient_id)
@@ -32,14 +36,23 @@ class PatientListAdapter (private val data: List<PatientModel>,
         val button = holder.button
         button.isEnabled = true
 //        holder.itemView.setOnClickListener {
-//            onClickListener.onClick()
+//            onClickListener.onClick(patient)
 //        }
+    }
 
+    companion object Diffcallback : DiffUtil.ItemCallback<PatientModel>() {
+        override fun areItemsTheSame(oldItem: PatientModel, newItem: PatientModel): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: PatientModel, newItem: PatientModel): Boolean {
+            return oldItem.id == newItem.id
+        }
     }
 
     override fun getItemCount() = data.size
 
-//    class OnClickListener(val clickListener: (patient: )-> Unit)  {
-//        fun onClick() = clickListener()
+//    class OnClickListener(val clickListener: (patient: PatientModel) -> Unit) {
+//        fun onClick(patient: PatientModel) = clickListener(patient)
 //    }
 }

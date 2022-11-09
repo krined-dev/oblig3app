@@ -3,7 +3,7 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/nav_graph"
-            app:startDestination="@id/FirstFragment">
+            app:startDestination="@id/SecondFragment">
 
     <fragment
             android:id="@+id/FirstFragment"
@@ -17,9 +17,9 @@
     </fragment>
     <fragment
             android:id="@+id/SecondFragment"
-            android:name="uit.ehelse.oblig3android.loggSymptoms.LoggSymptomsFragment"
+            android:name="uit.ehelse.oblig3android.registerSymptoms.RegisterSymptomsFragment"
             android:label="Register symptoms"
-            tools:layout="@layout/fragment_log_symptoms">
+            tools:layout="@layout/fragment_register_symptoms">
 
         <action
                 android:id="@+id/action_SecondFragment_to_FirstFragment"
