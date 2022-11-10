@@ -36,24 +36,24 @@ class RegisterSymptomsViewModel @Inject constructor(application: Application) : 
     val soreThroat: LiveData<Symptoms>
         get() = _soreThroat
 
-    private val _headache = MutableLiveData<Symptom>()
-    val headache: LiveData<Symptom>
+    private val _headache = MutableLiveData<Symptoms>()
+    val headache: LiveData<Symptoms>
         get() = _headache
 
-    private val _achesAndPain = MutableLiveData<Symptom>()
-    val achesAndPain: LiveData<Symptom>
+    private val _achesAndPain = MutableLiveData<Symptoms>()
+    val achesAndPain: LiveData<Symptoms>
         get() = _achesAndPain
 
-    private val _diarrhoa = MutableLiveData<Symptom>()
-    val diarrhoa: LiveData<Symptom>
+    private val _diarrhoa = MutableLiveData<Symptoms>()
+    val diarrhoa: LiveData<Symptoms>
         get() = _diarrhoa
 
-    private val _rashesOrDiscoloration = MutableLiveData<Symptom>()
-    val rashesOrDiscoloration: LiveData<Symptom>
+    private val _rashesOrDiscoloration = MutableLiveData<Symptoms>()
+    val rashesOrDiscoloration: LiveData<Symptoms>
         get() = _rashesOrDiscoloration
 
-    private val _breathingComplication = MutableLiveData<Symptom>()
-    val breathingComplication: LiveData<Symptom>
+    private val _breathingComplication = MutableLiveData<Symptoms>()
+    val breathingComplication: LiveData<Symptoms>
         get() = _breathingComplication
 
     private val _error: MutableLiveData<String> = MutableLiveData()
