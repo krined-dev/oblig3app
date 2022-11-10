@@ -58,8 +58,6 @@ interface AppHttpClient {
     suspend fun authorize(loginRequest: LoginRequest): Either<ApiError, LoginResponse>
 
     suspend fun registerNewSymptoms(registerNewSymptomsRequest: RegisterNewSymptomsRequest): String
-//
-//    suspend fun getPatient(): Either<ApiError, EndpointResources<IdResource<String>>>
 
     suspend fun getAllPatients(): Either<ApiError, EndpointResources<IdResource<String>>>
 
@@ -100,21 +98,6 @@ fun httpClient() = object : AppHttpClient {
                 header("Authorization", "Bearer ${TokenManager.getToken()}")
             }
         }.body()
-//
-//    override suspend fun getPatient(): Either<ApiError, EndpointResources<IdResource<String>>> = client.use { handler ->
-//        val response = handler.get("$BASE_URL/patient") {
-//            header("Authorization", "Bearer ${TokenManager.getToken()}")
-//        }
-//        Log.d("TOKEN", "Token: ${TokenManager.getToken()}")
-//        if (response.status.isSuccess()) {
-//            Either.Right(response.body())
-//        } else {
-//            when (response.status)  {
-//                HttpStatusCode.NoContent -> Either.Left(response.body<ApiErrorType.NotFound>())
-//                else -> Either.Left(ApiErrorType.Unauthorized)
-//            }
-//        }
-//    }
 
     override suspend fun getAllPatients(): Either<ApiError, EndpointResources<IdResource<String>>> = client.use { handler ->
         val response = handler.get("$BASE_URL/patients") {
