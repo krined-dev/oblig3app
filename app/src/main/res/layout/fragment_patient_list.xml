@@ -17,17 +17,27 @@
         android:layout_height="match_parent"
         tools:context=".patientList.PatientListFragment">
 
+
         <Button
             android:id="@+id/refreshButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:text="@string/refresh"
-            app:layout_constraintBottom_toTopOf="@id/patient_list"
+            app:layout_constraintStart_toEndOf="@id/addPatient"
             app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/refresh" />
+
+        <Button
+            android:id="@+id/addPatient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-        />
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toStartOf="@id/refreshButton"
+            android:text="@string/add_patient"/>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/patient_list"
@@ -38,6 +48,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="100dp"
             android:layout_marginBottom="50dp"
         />
 

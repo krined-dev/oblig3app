@@ -6,10 +6,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import uit.ehelse.oblig3android.R
-import uit.ehelse.oblig3android.registerSymptoms.Symptoms
 
 class RegisterSymptomsAdapter(
-    private val data: Symptoms
 ) : RecyclerView.Adapter<RegisterSymptomsAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) :RecyclerView.ViewHolder(view) {

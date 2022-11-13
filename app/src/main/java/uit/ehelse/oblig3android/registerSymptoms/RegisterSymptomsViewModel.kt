@@ -4,103 +4,164 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
 import uit.ehelse.oblig3android.api.IdResource
+import uit.ehelse.oblig3android.api.RegisterNewSymptomsRequest
 import uit.ehelse.oblig3android.api.Symptom
+import uit.ehelse.oblig3android.api.httpClient
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterSymptomsViewModel @Inject constructor(application: Application) : AndroidViewModel(application) {
 
-    private val _selectedPatient = MutableLiveData<Patient>()
-    val selectedPatient: LiveData<Patient>
-        get() = _selectedPatient
-
-    private val _fever = MutableLiveData<Symptoms>()
-    val fever: LiveData<Symptoms>
+    private val _fever = MutableLiveData<Boolean>()
+    val fever: LiveData<Boolean>
         get() = _fever
 
-    private val _coughing = MutableLiveData<Symptoms>()
-    val coughing: LiveData<Symptoms>
-        get() = _coughing
+    fun setFever(value: Boolean) = viewModelScope.launch {
+        _fever.value = value
+    }
 
-    private val _tiredness = MutableLiveData<Symptoms>()
-    val tiredness: LiveData<Symptoms>
+    private val _cough = MutableLiveData<Boolean>()
+    val cough: LiveData<Boolean>
+        get() = _cough
+
+    fun setCough(value: Boolean) = viewModelScope.launch {
+        _cough.value = value
+    }
+
+    private val _tiredness = MutableLiveData<Boolean>()
+    val tiredness: LiveData<Boolean>
         get() = _tiredness
 
-    private val _lossOfTasteAndOrSmell = MutableLiveData<Symptoms>()
-    val lossOfTasteAndOrSmell: LiveData<Symptoms>
-        get() = _lossOfTasteAndOrSmell
+    fun setTiredness(value: Boolean) = viewModelScope.launch {
+        _tiredness.value = value
+    }
 
-    private val _soreThroat = MutableLiveData<Symptoms>()
-    val soreThroat: LiveData<Symptoms>
+
+    private val _soreThroat = MutableLiveData<Boolean>()
+    val soreThroat: LiveData<Boolean>
         get() = _soreThroat
 
-    private val _headache = MutableLiveData<Symptoms>()
-    val headache: LiveData<Symptoms>
+    fun setSoreThroat(value: Boolean) = viewModelScope.launch {
+        _soreThroat.value = value
+    }
+
+    private val _headache = MutableLiveData<Boolean>()
+    val headache: LiveData<Boolean>
         get() = _headache
 
-    private val _achesAndPain = MutableLiveData<Symptoms>()
-    val achesAndPain: LiveData<Symptoms>
-        get() = _achesAndPain
+    fun setHeadache(value: Boolean) = viewModelScope.launch {
+        _headache.value = value
+    }
 
-    private val _diarrhoa = MutableLiveData<Symptoms>()
-    val diarrhoa: LiveData<Symptoms>
-        get() = _diarrhoa
+    private val _achesAndPains = MutableLiveData<Boolean>()
+    val achesAndPains: LiveData<Boolean>
+        get() = _achesAndPains
 
-    private val _rashesOrDiscoloration = MutableLiveData<Symptoms>()
-    val rashesOrDiscoloration: LiveData<Symptoms>
+    fun setAchesAndPains(value: Boolean) = viewModelScope.launch {
+        _achesAndPains.value = value
+    }
+
+    private val _rashesOrDiscoloration = MutableLiveData<Boolean>()
+    val rashesOrDiscoloration: LiveData<Boolean>
         get() = _rashesOrDiscoloration
 
-    private val _breathingComplication = MutableLiveData<Symptoms>()
-    val breathingComplication: LiveData<Symptoms>
+    fun setRashesOrDiscoloration(value: Boolean) = viewModelScope.launch {
+        _rashesOrDiscoloration.value = value
+    }
+
+    private val _lossOfSmellAndTaste = MutableLiveData<Boolean>()
+    val lossOfSmellAndTaste: LiveData<Boolean>
+        get() = _lossOfSmellAndTaste
+
+    fun setLossOfSmellAndTaste(value: Boolean) = viewModelScope.launch {
+        _lossOfSmellAndTaste.value = value
+    }
+
+    private val _diarrhea = MutableLiveData<Boolean>()
+    val diarrhea: LiveData<Boolean>
+        get() = _diarrhea
+
+    fun setDiarrhea(value: Boolean) = viewModelScope.launch {
+        _diarrhea.value = value
+    }
+
+    private val _breathingComplication = MutableLiveData<Boolean>()
+    val breathingComplication: LiveData<Boolean>
         get() = _breathingComplication
 
-    private val _error: MutableLiveData<String> = MutableLiveData()
-    val error: LiveData<String>
-        get() = _error
+    fun setBreathingComplication(value: Boolean) = viewModelScope.launch {
+        _breathingComplication.value = value
+    }
+
+    private val _response = MutableLiveData<String>()
+
+    val response: LiveData<String>
+        get() = _response
 
 
+    suspend fun submitSymptomsAsync(ssn: String) {
+        val wardId = "1"
+        withContext(Dispatchers.IO) {
+            val symptoms = SymptomInput(
+                fever = _fever.value ?: false,
+                cough = _cough.value ?: false,
+                tiredness = _tiredness.value ?: false,
+                soreThroat = _soreThroat.value ?: false,
+                headache = _headache.value ?: false,
+                achesAndPains = _achesAndPains.value ?: false,
+                rashesOrDiscoloration = _rashesOrDiscoloration.value ?: false,
+                lossOfSmellAndTaste = _lossOfSmellAndTaste.value ?: false,
+                diarrhea = _diarrhea.value ?: false,
+                breathingComplication = _breathingComplication.value ?: false
+            ).toListOfSymptom()
 
-//    suspend fun symptoms() {
-//        viewModelScope.launch {
-//            val symptom = Symptom() {
-//                _fever.value = Symptom.FEVER
-//            }
-//        }
-//
-//    }
+            _response.postValue(httpClient().registerNewSymptoms(RegisterNewSymptomsRequest(ssn, symptoms, wardId)))
+        }
+    }
 
-//    suspend fun getPatient() {
-//        viewModelScope.launch {
-//            val resources = httpClient().getAllRegisteredPatientsForWard().map {
-//                Log.d("RegisterSymptomsViewMod", "getPatient: \n ${Json.encodeToString(it.resources)}")
-//                _selectedPatient.value = it.resources.map {
-//                    Patient.tryFromResource(it)
-//                }
-//            }.mapLeft {
-//                Log.d("RegisterSymptomsViewMod", "getPatient: $it")
-//            }
-//        }.join()
-//    }
 }
 
-class Patient(
-    val id: String
-)
-
-class Symptoms(
-    val fever: String,
-    val couching: String
-
-){
-
-    companion object {
-        fun tryFromResource(idResource: IdResource<String>?): Patient {
-            idResource?.id.let { id ->
-                return Patient(id!!)
-            }
-        }
+data class SymptomInput(
+    val fever: Boolean,
+    val cough: Boolean,
+    val tiredness: Boolean,
+    val soreThroat: Boolean,
+    val headache: Boolean,
+    val achesAndPains: Boolean,
+    val rashesOrDiscoloration: Boolean,
+    val lossOfSmellAndTaste: Boolean,
+    val diarrhea: Boolean,
+    val breathingComplication: Boolean
+) {
+    fun toListOfSymptom(): List<Symptom> {
+        val symptoms = mutableListOf<Symptom>()
+        if (fever) symptoms.add(Symptom.FEVER)
+        if (cough) symptoms.add(Symptom.COUGHING)
+        if (tiredness) symptoms.add(Symptom.TIREDNESS)
+        if (soreThroat) symptoms.add(Symptom.SORE_THROAT)
+        if (headache) symptoms.add(Symptom.HEADACHE)
+        if (achesAndPains) symptoms.add(Symptom.ACHES_AND_PAINS)
+        if (rashesOrDiscoloration) symptoms.add(Symptom.RASHES_OR_DISCOLORATION)
+        if (lossOfSmellAndTaste) symptoms.add(Symptom.LOSS_OF_TASTE_AND_SMELL)
+        if (diarrhea) symptoms.add(Symptom.DIARRHOEA)
+        if (breathingComplication) symptoms.add(Symptom.BREATHING_COMPLICATIONS)
+        return symptoms
     }
 }
 
+@Serializable
+data class RegisterNewSymptomsRequest(
+    val patientId: String,
+    val symptoms: List<Symptom>,
+    val wardId: String
+) {
+
+
+}

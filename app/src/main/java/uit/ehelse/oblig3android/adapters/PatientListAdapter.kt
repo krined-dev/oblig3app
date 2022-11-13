@@ -16,11 +16,15 @@ class PatientListAdapter(
 //    private val onClickListener: OnClickListener
 //) : androidx.recyclerview.widget.ListAdapter<PatientModel, PatientListAdapter.ViewHolder>(Diffcallback) {
 
-
+    var registerSymptomOnClickListener : ((PatientModel) -> Unit)? = null
+    var deletePatientOnClickListener: ((PatientModel) -> Unit)? = null
+    var updatePatientOnClickListener: ((PatientModel) -> Unit)? = null
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val id: TextView = view.findViewById(R.id.patient_id)
-        val button: View = view.findViewById(R.id.register_symptom_button)
+        val createButton: View = view.findViewById(R.id.register_symptom_button)
+        val deleteButton: View = view.findViewById(R.id.delete_patient_button)
+        val updateButton: View = view.findViewById(R.id.update_patient_button)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -33,11 +37,27 @@ class PatientListAdapter(
         val patient = data[position]
         val textView = holder.id
         textView.text = patient.id
-        val button = holder.button
-        button.isEnabled = true
-//        holder.itemView.setOnClickListener {
-//            onClickListener.onClick(patient)
-//        }
+        val createButton = holder.createButton
+        val deleteButton = holder.deleteButton
+        val updateButton = holder.updateButton
+        createButton.isEnabled = true
+        deleteButton.isEnabled = true
+        updateButton.isEnabled = true
+
+        createButton.setOnClickListener {
+            registerSymptomOnClickListener?.invoke(patient)
+        }
+
+        deleteButton.setOnClickListener {
+            deletePatientOnClickListener?.invoke(patient)
+        }
+
+        updateButton.setOnClickListener {
+            updatePatientOnClickListener?.invoke(patient)
+        }
+
+
+
     }
 
     companion object Diffcallback : DiffUtil.ItemCallback<PatientModel>() {

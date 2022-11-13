@@ -12,13 +12,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import uit.ehelse.oblig3android.R
 import uit.ehelse.oblig3android.adapters.PatientListAdapter
+import uit.ehelse.oblig3android.api.httpClient
 import uit.ehelse.oblig3android.databinding.FragmentPatientListBinding
-import uit.ehelse.oblig3android.databinding.PatientRowItemBinding
-import javax.inject.Inject
-
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -38,7 +35,7 @@ class PatientListFragment() : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentPatientListBinding.inflate(inflater, container, false)
         // get patients async in viewmodelscope
@@ -49,13 +46,43 @@ class PatientListFragment() : Fragment() {
         // observe live data
         viewModel.patients.observe(viewLifecycleOwner) {
             // set adapter
-            binding.patientList.adapter = PatientListAdapter(it)
+            val adapter = PatientListAdapter(it)
+            binding.patientList.adapter = adapter
 
 //            binding.patientList.adapter = PatientListAdapter(PatientListAdapter.OnClickListener)
 //            binding.patientList.adapter = PatientListAdapter(PatientListAdapter.OnClickListener {
 //                viewModel.patientsList
 //            })
             binding.patientList.layoutManager = LinearLayoutManager(context)
+
+            adapter.registerSymptomOnClickListener = { patient ->
+//                Toast.makeText(context, "Clicked ${patient.id}", Toast.LENGTH_SHORT).show()
+                val action = PatientListFragmentDirections.actionFirstFragmentToSecondFragment(patient.id)
+                findNavController().navigate(action)
+            }
+
+            adapter.deletePatientOnClickListener = { patient ->
+                val deleteLink = patient.links.find { link -> link.method.rel == "delete" }
+                if (deleteLink != null) {
+                    lifecycleScope.launch {
+                        val result = httpClient().deletePatient(deleteLink.href)
+                        result.map {
+                            viewModel.getPatientsAsync()
+                        }.mapLeft {
+                            Toast.makeText(context, "Error deleting patient", Toast.LENGTH_SHORT).show()
+                        }
+
+                    }
+                }
+            }
+
+            adapter.updatePatientOnClickListener = { patient ->
+                val updateLink = patient.links.find { link -> link.method.rel == "update" }
+                if (updateLink != null) {
+                    val action = PatientListFragmentDirections.actionFirstFragmentToUpdateWardId(patient.id, updateLink.href)
+                    findNavController().navigate(action)
+                }
+            }
         }
         return binding.root
     }
@@ -66,6 +93,10 @@ class PatientListFragment() : Fragment() {
         binding.patientList.setOnClickListener {
 //            viewModel.patientsList.lastIndex
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+        }
+
+        binding.addPatient.setOnClickListener {
+            findNavController().navigate(R.id.action_FirstFragment_to_newPatient)
         }
 
         binding.refreshButton.setOnClickListener {

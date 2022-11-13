@@ -26,5 +26,15 @@
     <string name="refresh">Refresh</string>
     <string name="element_text">\"\"</string>
     <string name="register_symptoms_button">Select</string>
+    <string name="add_patient">Add patient</string>
+    <string name="delete_patient_button">delete</string>
+    <string name="update_patient_button"/>
+    <string name="update_pat_button">update</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="new_ssn_hint">Enter ssn</string>
+    <string name="new_ward_hint">Ward ID</string>
+    <string name="update_patient"/>
+    <string name="update_pat">Update</string>
 
 </resources>

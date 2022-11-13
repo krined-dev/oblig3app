@@ -14,6 +14,8 @@
         <action
                 android:id="@+id/action_FirstFragment_to_SecondFragment"
                 app:destination="@id/SecondFragment"/>
+        <action android:id="@+id/action_FirstFragment_to_newPatient" app:destination="@id/newPatient"/>
+        <action android:id="@+id/action_FirstFragment_to_updateWardId" app:destination="@id/updateWardId"/>
     </fragment>
     <fragment
             android:id="@+id/SecondFragment"
@@ -24,8 +26,21 @@
         <action
                 android:id="@+id/action_SecondFragment_to_FirstFragment"
                 app:destination="@id/FirstFragment"/>
-<!--        <argument-->
+        <argument android:name="ssn" app:argType="string"/>
+        <!--        <argument-->
 <!--            android:name="selectedUser"-->
 <!--            app:argType="uit.ehelse.oblig3android.api.AppHttpClient" />-->
     </fragment>
+    <fragment android:id="@+id/newPatient" android:name="uit.ehelse.oblig3android.newPatient.NewPatientFragment"
+              android:label="fragment_new_patient" tools:layout="@layout/fragment_new_patient">
+        <action android:id="@+id/action_newPatient_to_FirstFragment" app:destination="@id/FirstFragment"/>
+    </fragment>
+    <fragment android:id="@+id/updateWardId" android:name="uit.ehelse.oblig3android.updateWardId.UpdateWardId"
+              android:label="fragment_update_ward_id" tools:layout="@layout/fragment_update_ward_id">
+        <action android:id="@+id/action_updateWardId_to_FirstFragment" app:destination="@id/FirstFragment"/>
+        <argument android:name="wardId" app:argType="string"/>
+        <argument android:name="updateUrl" app:argType="string"/>
+    </fragment>
+
+
 </navigation>

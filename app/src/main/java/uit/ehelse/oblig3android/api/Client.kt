@@ -32,7 +32,7 @@ object TokenManager {
     @JvmName("getToken1")
     suspend fun getToken(): String? = withContext(Dispatchers.IO) {
         if (token == null) {
-            val res = httpClient().authorize(LoginRequest(USERNAME, PASSWORD)).map {
+            val res = httpClient().authorize().map {
                 token = it.token
                 expiresAt = it.timeToLive
                 token
@@ -41,8 +41,8 @@ object TokenManager {
             }
         }
 
-        if (System.currentTimeMillis() >= expiresAt ?: 0) {
-            val res = httpClient().authorize(LoginRequest(USERNAME, PASSWORD)).map {
+        if (System.currentTimeMillis() >= (expiresAt ?: 0)) {
+            val res = httpClient().authorize().map {
                 token = it.token
                 expiresAt = it.timeToLive
                 token
@@ -50,20 +50,25 @@ object TokenManager {
                 token = null
             }
         }
-
         token
     }
 }
 interface AppHttpClient {
-    suspend fun authorize(loginRequest: LoginRequest): Either<ApiError, LoginResponse>
+    suspend fun authorize(): Either<ApiError, LoginResponse>
 
     suspend fun registerNewSymptoms(registerNewSymptomsRequest: RegisterNewSymptomsRequest): String
 
     suspend fun getAllPatients(): Either<ApiError, EndpointResources<IdResource<String>>>
 
+    suspend fun registerPatient(registerPatientRequest: PatientModelRequest): Either<ApiError, Boolean>
+
     suspend fun getAllRegisteredSymptoms(): EndpointResources<IdResource<Long>>
 
     suspend fun getAllRegisteredPatientsForWard(wardId: String): EndpointResources<IdResource<String>>
+
+    suspend fun deletePatient(url: String): Either<ApiError, Boolean>
+
+    suspend fun updateWardIdForPatient(url: String, wardId: String): Either<ApiError, Boolean>
 
 }
 fun httpClient() = object : AppHttpClient {
@@ -75,10 +80,10 @@ fun httpClient() = object : AppHttpClient {
             })
         }
     }
-    override suspend fun authorize(loginRequest: LoginRequest): Either<ApiError, LoginResponse> {
+    override suspend fun authorize(): Either<ApiError, LoginResponse> {
         val response = client.use { handler ->
             handler.post("$BASE_URL/login") {
-                 setBody(LoginRequest(USERNAME, PASSWORD)) // TODO: Change to loginRequest
+                 setBody(LoginRequest(USERNAME, PASSWORD)) //
             header("Content-Type", "application/json")
             }
         }
@@ -108,10 +113,27 @@ fun httpClient() = object : AppHttpClient {
             Either.Right(response.body())
         } else {
             when (response.status)  {
-                HttpStatusCode.NoContent -> Either.Left(response.body<ApiErrorType.NotFound>())
+                HttpStatusCode.NoContent -> Either.Left(ApiErrorType.NotFound("No patients found"))
                 else -> Either.Left(ApiErrorType.Unauthorized)
             }
         }
+    }
+
+    override suspend fun registerPatient(registerPatientRequest: PatientModelRequest): Either<ApiError, Boolean> = client.use { handler ->
+        val response = handler.post("$BASE_URL/patients") {
+            setBody(registerPatientRequest)
+            header("Content-Type", "application/json")
+            header("Authorization", "Bearer ${TokenManager.getToken()}")
+        }
+        if (response.status.isSuccess()) {
+            Either.Right(true)
+        } else {
+            when (response.status)  {
+                HttpStatusCode.UnprocessableEntity -> Either.Left(ApiErrorType.InternalServerError)
+                else -> Either.Left(ApiErrorType.Unauthorized)
+            }
+        }
+
     }
 
     override suspend fun getAllRegisteredSymptoms(): EndpointResources<IdResource<Long>> {
@@ -129,7 +151,44 @@ fun httpClient() = object : AppHttpClient {
             }.body()
         }
     }
+
+    override suspend fun deletePatient(url: String): Either<ApiError, Boolean> {
+        return client.use { handler ->
+            val response = handler.delete(url) {
+                header("Authorization", "Bearer ${TokenManager.getToken()}")
+            }
+            if (response.status.isSuccess()) {
+                Either.Right(true)
+            } else {
+                when (response.status)  {
+                    HttpStatusCode.UnprocessableEntity -> Either.Left(ApiErrorType.InternalServerError)
+                    else -> Either.Left(ApiErrorType.Unauthorized)
+                }
+            }
+        }
+    }
+
+    override suspend fun updateWardIdForPatient(url: String, wardId: String): Either<ApiError, Boolean> = client.use { handler ->
+        val response = handler.put(url) {
+            setBody(UpdateWardIdRequest(wardId))
+            header("Content-Type", "application/json")
+            header("Authorization", "Bearer ${TokenManager.getToken()}")
+        }
+        if (response.status.isSuccess()) {
+            Either.Right(true)
+        } else {
+            when (response.status)  {
+                HttpStatusCode.UnprocessableEntity -> Either.Left(ApiErrorType.InternalServerError)
+                else -> Either.Left(ApiErrorType.Unauthorized)
+            }
+        }
+
+    }
 }
+
+@Serializable
+data class UpdateWardIdRequest(val wardId: String)
+
 
 @Serializable
 data class LoginRequest(
@@ -224,3 +283,10 @@ fun main() {
 
     println(jsonT)
 }
+
+@Serializable
+data class PatientModelRequest(
+    val externalId: String,
+    val wardId: String,
+    val internalId: String? = null,
+)

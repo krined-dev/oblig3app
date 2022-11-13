@@ -20,9 +20,34 @@
         android:id="@+id/register_symptom_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
+        android:minWidth="0dp"
+        android:paddingLeft="10dp"
         android:text="@string/register_symptoms_button"
-        android:paddingRight="16dp"
+        android:paddingRight="10dp"
+        android:textSize="10sp"
+    />
+
+
+    <Button
+        android:id="@+id/update_patient_button"
+        android:layout_width="wrap_content"
+        android:minWidth="0dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:text="@string/update_pat_button"
+        android:paddingRight="10dp"
+        android:textSize="10sp"
+    />
+
+
+    <Button
+        android:id="@+id/delete_patient_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="0dp"
+        android:paddingLeft="10dp"
+        android:text="@string/delete_patient_button"
+        android:paddingRight="10dp"
         android:textSize="10sp"
     />
 

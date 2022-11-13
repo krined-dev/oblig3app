@@ -7,9 +7,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import uit.ehelse.oblig3android.api.EndpointLink
 import uit.ehelse.oblig3android.api.IdResource
 import uit.ehelse.oblig3android.api.httpClient
 import javax.inject.Inject
@@ -47,14 +50,16 @@ class PatientListViewModel @Inject constructor(application: Application) : Andro
 }
 
 class PatientModel(
-    val id: String
+    val id: String,
+    val links: List<EndpointLink>
 ) {
 
     companion object {
         fun tryFromResource(idResource: IdResource<String>?): PatientModel {
-            idResource?.id.let { id ->
-                return PatientModel(id!!)
-            }
+            return PatientModel(
+                idResource?.id ?: "",
+                idResource?.links ?: emptyList()
+            )
         }
     }
 }
