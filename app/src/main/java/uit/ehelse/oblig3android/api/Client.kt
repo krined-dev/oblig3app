@@ -26,13 +26,15 @@ const val PASSWORD = "password"
 const val BASE_URL = "http://192.168.4.176:8080"
 
 object TokenManager {
-    private var token: String? = null
+    var token: String? = null
     private var expiresAt: Long? = null
+    var username: String? = null
+    var password: String? = null
 
     @JvmName("getToken1")
     suspend fun getToken(): String? = withContext(Dispatchers.IO) {
         if (token == null) {
-            val res = httpClient().authorize().map {
+            val res = httpClient().authorize(username ?: "", password ?: "").map {
                 token = it.token
                 expiresAt = it.timeToLive
                 token
@@ -42,7 +44,7 @@ object TokenManager {
         }
 
         if (System.currentTimeMillis() >= (expiresAt ?: 0)) {
-            val res = httpClient().authorize().map {
+            val res = httpClient().authorize(username ?: "", password ?: "").map {
                 token = it.token
                 expiresAt = it.timeToLive
                 token
@@ -54,7 +56,7 @@ object TokenManager {
     }
 }
 interface AppHttpClient {
-    suspend fun authorize(): Either<ApiError, LoginResponse>
+    suspend fun authorize(username: String, password: String): Either<ApiError, LoginResponse>
 
     suspend fun registerNewSymptoms(registerNewSymptomsRequest: RegisterNewSymptomsRequest): String
 
@@ -80,10 +82,10 @@ fun httpClient() = object : AppHttpClient {
             })
         }
     }
-    override suspend fun authorize(): Either<ApiError, LoginResponse> {
+    override suspend fun authorize(username: String, password: String): Either<ApiError, LoginResponse> {
         val response = client.use { handler ->
             handler.post("$BASE_URL/login") {
-                 setBody(LoginRequest(USERNAME, PASSWORD)) //
+                 setBody(LoginRequest(username, password)) //
             header("Content-Type", "application/json")
             }
         }

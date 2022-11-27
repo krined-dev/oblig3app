@@ -14,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import uit.ehelse.oblig3android.R
 import uit.ehelse.oblig3android.adapters.PatientListAdapter
+import uit.ehelse.oblig3android.api.TokenManager
 import uit.ehelse.oblig3android.api.httpClient
 import uit.ehelse.oblig3android.databinding.FragmentPatientListBinding
 
@@ -37,6 +38,10 @@ class PatientListFragment() : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        if (TokenManager.username == null) {
+            val action = PatientListFragmentDirections.actionFirstFragmentToLoginFragment()
+            findNavController().navigate(action)
+        }
         _binding = FragmentPatientListBinding.inflate(inflater, container, false)
         // get patients async in viewmodelscope
         lifecycleScope.launch {
@@ -69,7 +74,7 @@ class PatientListFragment() : Fragment() {
                         result.map {
                             viewModel.getPatientsAsync()
                         }.mapLeft {
-                            Toast.makeText(context, "Error deleting patient", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Error: Insufficient privileges", Toast.LENGTH_SHORT).show()
                         }
 
                     }
@@ -103,6 +108,14 @@ class PatientListFragment() : Fragment() {
             lifecycleScope.launch {
                 viewModel.getPatientsAsync()
             }
+        }
+
+        binding.logout.setOnClickListener {
+            TokenManager.username = null
+            TokenManager.password = null
+            TokenManager.token = null
+            val action = PatientListFragmentDirections.actionFirstFragmentToLoginFragment()
+            findNavController().navigate(action)
         }
     }
 

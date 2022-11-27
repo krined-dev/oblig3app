@@ -16,6 +16,7 @@
                 app:destination="@id/SecondFragment"/>
         <action android:id="@+id/action_FirstFragment_to_newPatient" app:destination="@id/newPatient"/>
         <action android:id="@+id/action_FirstFragment_to_updateWardId" app:destination="@id/updateWardId"/>
+        <action android:id="@+id/action_FirstFragment_to_loginFragment" app:destination="@id/loginFragment"/>
     </fragment>
     <fragment
             android:id="@+id/SecondFragment"
@@ -40,6 +41,10 @@
         <action android:id="@+id/action_updateWardId_to_FirstFragment" app:destination="@id/FirstFragment"/>
         <argument android:name="wardId" app:argType="string"/>
         <argument android:name="updateUrl" app:argType="string"/>
+    </fragment>
+    <fragment android:id="@+id/loginFragment" android:name="uit.ehelse.oblig3android.ui.login.LoginFragment"
+              android:label="fragment_login" tools:layout="@layout/fragment_login">
+        <action android:id="@+id/action_loginFragment_to_FirstFragment" app:destination="@id/FirstFragment"/>
     </fragment>
 
 
