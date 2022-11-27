@@ -1,6 +1,7 @@
 package uit.ehelse.oblig3android.registerSymptoms
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -122,7 +123,9 @@ class RegisterSymptomsViewModel @Inject constructor(application: Application) : 
                 breathingComplication = _breathingComplication.value ?: false
             ).toListOfSymptom()
 
-            _response.postValue(httpClient().registerNewSymptoms(RegisterNewSymptomsRequest(ssn, symptoms, wardId)))
+            val response = httpClient().registerNewSymptoms(RegisterNewSymptomsRequest(ssn, symptoms, wardId))
+            Log.i("Symptoms", response)
+            _response.postValue(response)
         }
     }
 

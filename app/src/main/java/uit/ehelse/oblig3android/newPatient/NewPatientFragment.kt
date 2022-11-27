@@ -56,7 +56,7 @@ class NewPatientFragment() : Fragment() {
                     viewModel.setWardId(binding.newWardId.text.toString())
                     lifecycleScope.launch {
                         viewModel.registerPatient()
-                        Toast.makeText(context, "Patient already registered", Toast.LENGTH_SHORT).show() // Not always the case, but ok for now
+                        Toast.makeText(context, "${viewModel.response.value}", Toast.LENGTH_SHORT).show() // Not always the case, but ok for now
                         // navigate back
                         findNavController().navigate(R.id.action_newPatient_to_FirstFragment)
                     }

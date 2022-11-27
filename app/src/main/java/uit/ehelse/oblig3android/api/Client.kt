@@ -21,9 +21,9 @@ import kotlinx.serialization.json.Json
  *  We just hardcode some credentials for now to use for demoing the app...
  */
 
-const val USERNAME = "test"
-const val PASSWORD = "test"
-const val BASE_URL = "https://oblig3web.krined.no"
+const val USERNAME = "user"
+const val PASSWORD = "password"
+const val BASE_URL = "http://192.168.4.176:8080"
 
 object TokenManager {
     private var token: String? = null
@@ -205,7 +205,7 @@ data class LoginResponse(
 
 @Serializable
 data class RegisterNewSymptomsRequest(
-    val patientId: String,
+    val externalId: String,
     val symptoms: List<Symptom>,
     val wardId: String
 )

@@ -48,7 +48,7 @@ class NewPatientViewModel @Inject constructor(application: android.app.Applicati
             httpClient().registerPatient(patient).map {
                 _response.postValue("Patient registered")
             }.mapLeft {
-                _response.postValue("Error: $it")
+                _response.postValue("Error: Already registered") // Not always true, but for demo purposes. Could be other errors
             }
         }
     }
